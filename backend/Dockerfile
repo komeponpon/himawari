@@ -1,17 +1,16 @@
 # ベースイメージ
 FROM node:20.14
 
-# 作業ディレクトリの設定
-WORKDIR /usr/src/app
+# アプリケーションディレクトリの作成
+WORKDIR /app
 
-# パッケージファイルをコピー
+# パッケージをインストール
 COPY package*.json ./
-
-# 依存関係のインストール
 RUN npm install
 
-# ソースコードをコピー
+# アプリケーションファイルをコピー
 COPY . .
+RUN npm run build
 
-# 開発サーバーの起動
-CMD ["npm", "run", "dev"]
+# バックエンドサーバーの起動
+CMD ["node", "dist/index.js"]

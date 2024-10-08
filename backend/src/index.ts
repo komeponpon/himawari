@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 app.get('/', (req, res) => {
-  res.send('Hello from the backend with TypeScript!');
+  res.send('Hello, World!');
 });
 
 app.listen(port, () => {
