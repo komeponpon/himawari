@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                  // Node.js 20はES2022標準をサポートしているため
+    "module": "ESNext",                  // ESモジュールを使用 (import/export)
+    "moduleResolution": "node",          // Node.jsモジュール解決を使用
+    "outDir": "./dist",                  // 出力ディレクトリ
+    "rootDir": "./src",                  // ソースディレクトリ
+    "strict": true,                      // 厳密な型チェックを有効化
+    "esModuleInterop": true,             // CommonJSとの互換性を有効化
+    "skipLibCheck": true,                // ライブラリの型チェックをスキップしてビルド速度を向上
+    "forceConsistentCasingInFileNames": true, // ファイル名の大文字小文字の一貫性を強制
+    "allowSyntheticDefaultImports": true, // デフォルトインポートを許可
+    "noImplicitReturns": true,           // 関数で戻り値が暗黙のうちに無くなることを防ぐ
+    "noFallthroughCasesInSwitch": true,  // switch文でfallthroughを防ぐ
+    "resolveJsonModule": true,           // JSONモジュールのインポートを許可
+    "isolatedModules": true,             // 各ファイルをモジュールとして扱う（ESモジュール環境向け）
+    "noEmit": false,                     // コンパイル時にファイルを出力
+    "types": ["node"]                    // Node.jsの型定義を使用
+  },
+  "include": ["src/**/*.ts"],             // srcディレクトリ内の.tsファイルを含む
+  "exclude": ["node_modules", "dist"]     // node_modulesとdistディレクトリは除外
+}
