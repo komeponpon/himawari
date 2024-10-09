@@ -17,11 +17,13 @@ services:
     build: ./backend
     ports:
       - '5001:5000'
+      - '5555:5555'
     volumes:
       - ./backend:/app
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:password@database:5432/leasecode
+      - PORT=5000
     depends_on:
       database:
         condition: service_healthy
