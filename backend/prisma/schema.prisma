@@ -15,7 +15,7 @@ datasource db {
 
 model solar_system {
   id                       Int     @id @default(autoincrement())
-  lease_company            String  @db.Varchar(50)
+  lease_company            String  @db.VarChar(50)
   lease_period             String  @db.VarChar(50)
   module_output            Decimal @db.Decimal(10, 2)
   module_manufacturer      String  @db.VarChar(50)
@@ -35,7 +35,7 @@ model solar_system {
 
 model batteries {
   id                       Int     @id @default(autoincrement())
-  lease_company            String  @db.Varchar(50)
+  lease_company            String  @db.VarChar(50)
   lease_period             String  @db.VarChar(50)
   battery_manufacturer     String  @db.VarChar(50)
   model                    String  @db.VarChar(50)
