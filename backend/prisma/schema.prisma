@@ -19,9 +19,16 @@ model solar_system {
   lease_period             String  @db.VarChar(50)
   module_output            Decimal @db.Decimal(10, 2)
   module_manufacturer      String  @db.VarChar(50)
-  model                    String  @db.VarChar(50)
+  module_model             String  @db.VarChar(50)
   module_count             Int
   pcs_manufacturer         String  @db.VarChar(50)
+  pcs_model                String  @db.VarChar(50)
+  pcs_count                Int
+  pcs_model2               String  @db.VarChar(50)
+  pcs_count2               Int
+  module_pcs_cable_count   Int
+  bifurcated_count         Int
+  bracket_count            Int
   total_module_output      Decimal @db.Decimal(10, 2)
   application_power_output Decimal @db.Decimal(10, 2)
   region                   String  @db.VarChar(50)
