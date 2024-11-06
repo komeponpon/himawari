@@ -2,17 +2,20 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.7.4",
+    "csv-parser": "^3.0.0",
     "express": "^4.21.0",
+    "iconv-lite": "^0.6.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node-dev src/index.ts"
+    "dev": "ts-node-dev src/index.ts",
+    "importCsv": "ts-node scripts/importCsv.ts"
   },
   "devDependencies": {
-    "prisma": "^5.20.0"
+    "@types/node": "^22.9.0",
+    "prisma": "^5.22.0"
   }
 }
