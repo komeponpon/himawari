@@ -6,7 +6,12 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://192.168.0.191:3000'],
+  origin: [
+    'http://localhost:3000',
+    'http://192.168.0.191:3000',
+    'http://frontend:3000',
+    'http://localhost:5001'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -98,6 +103,22 @@ app.get('/api/solar-systems/search', async (req, res) => {
 
     console.log('Final where clause:', JSON.stringify(whereClause, null, 2));
 
+    // データベース接続状態の確認
+    await prisma.$queryRaw`SELECT 1`;
+
+    // テーブルの存在確認
+    const tableExists = await prisma.$queryRaw`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'solar_system'
+      );
+    `;
+
+    if (!tableExists) {
+      throw new Error('テーブルが存在しません');
+    }
+
     // まず全件取得してデータの存在を確認
     const allRecords = await prisma.solar_system.findMany({
       take: 1  // 1件だけ取得
@@ -118,7 +139,8 @@ app.get('/api/solar-systems/search', async (req, res) => {
     const errorMessage = error instanceof Error ? error.message : '不明なエラーが発生しました';
     res.status(500).json({ 
       error: errorMessage,
-      details: error instanceof Error ? error.stack : undefined
+      details: error instanceof Error ? error.stack : undefined,
+      tableExists: false
     });
   }
 });
