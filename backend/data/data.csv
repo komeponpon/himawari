@@ -1,4 +1,4 @@
-id,lease_company,lease_period,module_output,module_manufacturer,module_model,module_count,pcs_manufacturer,pcs_model,pcs_count,pcs_model2,pcs_count2,module_pcs_cable_count,bifurcated_count,bracket_count,total_module_output,application_power_output,region,roof_material,installation_points,monthly_lease_fee_10,monthly_lease_fee_15,total_leace_amount,customer_group,application_code
+id,lease_company,lease_period,module_output,module_manufacturer,module_model,module_count,pcs_manufacturer,pcs_model,pcs_count,pcs_model2,pcs_count2,module_pcs_cable_count,bifurcated_count,bracket_count,total_module_output,application_power_output,region,roof_material,installation_points,monthly_lease_fee_10,monthly_lease_fee_15,total_lease_amount,customer_group,application_code
 1,大阪ガスファイナンス,10年,400,maxeon,SPR-MAX3-400,8,デルタ電子,H4J_220,1,H6J_240,,2,,1,3.2,3.2,通常,立平葺,6点,7700,,924000,直販,C8MA08B6
 2,大阪ガスファイナンス,10年,400,maxeon,SPR-MAX3-400,8,デルタ電子,H4J_220,1,H6J_240,,2,,1,3.2,3.2,通常,立平葺,8点,7810,,937200,直販,C8MA08B8
 3,大阪ガスファイナンス,10年,400,maxeon,SPR-MAX3-400,9,デルタ電子,H4J_220,1,H6J_240,,2,,1,3.6,3.6,通常,立平葺,6点,8668,,1040160,直販,C8MA09B6

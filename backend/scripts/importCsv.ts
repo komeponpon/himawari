@@ -20,7 +20,7 @@ interface CsvRow {
   bracket_count: string;
   monthly_lease_fee_10: string;
   monthly_lease_fee_15: string | null;
-  total_leace_amount: string;
+  total_lease_amount: string;
   lease_company: string;
   lease_period: string;
   module_manufacturer: string;
@@ -67,7 +67,7 @@ async function importCsv(): Promise<void> {
             bracket_count: Number(row.bracket_count || 0),
             monthly_lease_fee_10: new Prisma.Decimal(row.monthly_lease_fee_10 || 0),
             monthly_lease_fee_15: row.monthly_lease_fee_15 ? new Prisma.Decimal(row.monthly_lease_fee_15) : null,
-            total_leace_amount: new Prisma.Decimal(row.total_leace_amount || 0),
+            total_lease_amount: new Prisma.Decimal(row.total_lease_amount || 0),
             lease_company: row.lease_company,
             lease_period: row.lease_period,
             module_manufacturer: row.module_manufacturer,
