@@ -5,7 +5,12 @@ import { PrismaClient } from '@prisma/client';
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://192.168.0.191:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // ルートパスのテスト用エンドポイント
@@ -16,15 +21,17 @@ app.get('/', (req, res) => {
 // 検索APIのエンドポイント
 app.get('/api/solar-systems/search', async (req, res) => {
   try {
+    console.log('Received search request');
     console.log('Search params:', req.query);
 
     const whereClause: any = {};
 
     // 文字列フィールドの部分一致検索
     if (req.query.lease_company) {
+      console.log('Adding lease_company to where clause:', req.query.lease_company);
       whereClause.lease_company = {
         contains: String(req.query.lease_company),
-        mode: 'insensitive'  // 大文字小文字を区別しない
+        mode: 'insensitive'
       };
     }
 
@@ -89,18 +96,30 @@ app.get('/api/solar-systems/search', async (req, res) => {
       };
     }
 
-    console.log('Where clause:', whereClause);
+    console.log('Final where clause:', JSON.stringify(whereClause, null, 2));
 
+    // まず全件取得してデータの存在を確認
+    const allRecords = await prisma.solar_system.findMany({
+      take: 1  // 1件だけ取得
+    });
+    console.log('Sample record:', allRecords[0]);
+
+    // 検索実行
     const results = await prisma.solar_system.findMany({
       where: whereClause,
     });
 
-    console.log('Search results:', results);
+    console.log('Search results count:', results.length);
+    console.log('First result:', results[0]);
+
     res.json(results);
   } catch (error) {
-    console.error('Search error:', error);
+    console.error('Detailed error:', error);
     const errorMessage = error instanceof Error ? error.message : '不明なエラーが発生しました';
-    res.status(500).json({ error: errorMessage });
+    res.status(500).json({ 
+      error: errorMessage,
+      details: error instanceof Error ? error.stack : undefined
+    });
   }
 });
 

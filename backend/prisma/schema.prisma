@@ -36,7 +36,7 @@ model solar_system {
   installation_points      String  @db.VarChar(50)
   monthly_lease_fee_10     Decimal @db.Decimal(10, 0)
   monthly_lease_fee_15     Decimal? @db.Decimal(10, 0)
-  total_leace_amount       Decimal @db.Decimal(10, 0)
+  total_lease_amount       Decimal @db.Decimal(10, 0)
   customer_group           String  @db.VarChar(50)
   application_code         String  @unique @db.VarChar(50)
 }
@@ -51,7 +51,7 @@ model batteries {
   quantity                 Int
   total_capacity           Decimal @db.Decimal(10, 2)
   monthly_lease_fee        Decimal @db.Decimal(10, 0)
-  total_leace_amount       Decimal @db.Decimal(10, 0)
+  total_lease_amount       Decimal @db.Decimal(10, 0)
   customer_group           String  @db.VarChar(50)
   application_code         String  @unique @db.VarChar(50)
 }
@@ -61,6 +61,6 @@ model construction_costs {
   lease_company            String  @db.VarChar(50)
   payment_amount_to_dealer Decimal @db.Decimal(10, 0)
   monthly_lease_fee        Decimal @db.Decimal(10, 0)
-  total_leace_amount       Decimal @db.Decimal(10, 0)
+  total_lease_amount       Decimal @db.Decimal(10, 0)
   application_code         String  @unique @db.VarChar(50)
 }

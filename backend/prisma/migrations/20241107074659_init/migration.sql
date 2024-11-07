@@ -22,7 +22,7 @@ CREATE TABLE "solar_system" (
     "installation_points" VARCHAR(50) NOT NULL,
     "monthly_lease_fee_10" DECIMAL(10,0) NOT NULL,
     "monthly_lease_fee_15" DECIMAL(10,0),
-    "total_leace_amount" DECIMAL(10,0) NOT NULL,
+    "total_lease_amount" DECIMAL(10,0) NOT NULL,
     "customer_group" VARCHAR(50) NOT NULL,
     "application_code" VARCHAR(50) NOT NULL,
 
@@ -40,7 +40,7 @@ CREATE TABLE "batteries" (
     "quantity" INTEGER NOT NULL,
     "total_capacity" DECIMAL(10,2) NOT NULL,
     "monthly_lease_fee" DECIMAL(10,0) NOT NULL,
-    "total_leace_amount" DECIMAL(10,0) NOT NULL,
+    "total_lease_amount" DECIMAL(10,0) NOT NULL,
     "customer_group" VARCHAR(50) NOT NULL,
     "application_code" VARCHAR(50) NOT NULL,
 
@@ -53,7 +53,7 @@ CREATE TABLE "construction_costs" (
     "lease_company" VARCHAR(50) NOT NULL,
     "payment_amount_to_dealer" DECIMAL(10,0) NOT NULL,
     "monthly_lease_fee" DECIMAL(10,0) NOT NULL,
-    "total_leace_amount" DECIMAL(10,0) NOT NULL,
+    "total_lease_amount" DECIMAL(10,0) NOT NULL,
     "application_code" VARCHAR(50) NOT NULL,
 
     CONSTRAINT "construction_costs_pkey" PRIMARY KEY ("id")
