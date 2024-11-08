@@ -24,11 +24,41 @@ app.get('/', (req, res) => {
 });
 
 // 検索APIのエンドポイント
-app.get('/api/solar-systems/search', async (req, res) => {
+app.get('/api/solar-systems/search', async (req: express.Request, res: express.Response): Promise<any> => {
   try {
     console.log('Received search request');
     console.log('Search params:', req.query);
 
+    // データベース接続テスト
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      console.log('Database connection successful');
+    } catch (dbError) {
+      console.error('Database connection error:', dbError);
+      return res.status(500).json({
+        error: 'データベース接続エラー',
+        details: dbError instanceof Error ? dbError.message : 'Unknown error'
+      });
+    }
+
+    // テーブル存在確認
+    const tableExists = await prisma.$queryRaw<[{ exists: boolean }]>`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'solar_system'
+      );
+    `;
+    console.log('Table exists check:', tableExists);
+
+    if (!tableExists[0].exists) {
+      return res.status(500).json({
+        error: 'テーブルが存在しません',
+        details: 'solar_systemテーブルが見つかりません'
+      });
+    }
+
+    // 検索条件の構築
     const whereClause: any = {};
 
     // 文字列フィールドの部分一致検索
@@ -101,46 +131,22 @@ app.get('/api/solar-systems/search', async (req, res) => {
       };
     }
 
-    console.log('Final where clause:', JSON.stringify(whereClause, null, 2));
-
-    // データベース接続状態の確認
-    await prisma.$queryRaw`SELECT 1`;
-
-    // テーブルの存在確認
-    const tableExists = await prisma.$queryRaw`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'solar_system'
-      );
-    `;
-
-    if (!tableExists) {
-      throw new Error('テーブルが存在しません');
-    }
-
-    // まず全件取得してデータの存在を確認
-    const allRecords = await prisma.solar_system.findMany({
-      take: 1  // 1件だけ取得
-    });
-    console.log('Sample record:', allRecords[0]);
+    console.log('Executing search with where clause:', JSON.stringify(whereClause, null, 2));
 
     // 検索実行
     const results = await prisma.solar_system.findMany({
       where: whereClause,
     });
 
-    console.log('Search results count:', results.length);
-    console.log('First result:', results[0]);
+    console.log(`Found ${results.length} results`);
+    
+    return res.json(results);
 
-    res.json(results);
   } catch (error) {
-    console.error('Detailed error:', error);
-    const errorMessage = error instanceof Error ? error.message : '不明なエラーが発生しました';
-    res.status(500).json({ 
-      error: errorMessage,
-      details: error instanceof Error ? error.stack : undefined,
-      tableExists: false
+    console.error('Search error:', error);
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : '不明なエラーが発生しました',
+      details: error instanceof Error ? error.stack : undefined
     });
   }
 });
