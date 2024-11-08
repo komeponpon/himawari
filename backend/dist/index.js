@@ -9,7 +9,12 @@ const client_1 = require("@prisma/client");
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use((0, cors_1.default)({
-    origin: ['http://localhost:3000', 'http://192.168.0.191:3000'],
+    origin: [
+        'http://localhost:3000',
+        'http://192.168.0.191:3000',
+        'http://frontend:3000',
+        'http://localhost:5001'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -24,6 +29,34 @@ app.get('/api/solar-systems/search', async (req, res) => {
     try {
         console.log('Received search request');
         console.log('Search params:', req.query);
+        // データベース接続テスト
+        try {
+            await prisma.$queryRaw `SELECT 1`;
+            console.log('Database connection successful');
+        }
+        catch (dbError) {
+            console.error('Database connection error:', dbError);
+            return res.status(500).json({
+                error: 'データベース接続エラー',
+                details: dbError instanceof Error ? dbError.message : 'Unknown error'
+            });
+        }
+        // テーブル存在確認
+        const tableExists = await prisma.$queryRaw `
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'solar_system'
+      );
+    `;
+        console.log('Table exists check:', tableExists);
+        if (!tableExists[0].exists) {
+            return res.status(500).json({
+                error: 'テーブルが存在しません',
+                details: 'solar_systemテーブルが見つかりません'
+            });
+        }
+        // 検索条件の構築
         const whereClause = {};
         // 文字列フィールドの部分一致検索
         if (req.query.lease_company) {
@@ -67,16 +100,41 @@ app.get('/api/solar-systems/search', async (req, res) => {
         if (req.query.module_count) {
             whereClause.module_count = Number(req.query.module_count);
         }
+        // パネル合計出力の範囲検索
         if (req.query.total_module_output_min || req.query.total_module_output_max) {
             whereClause.total_module_output = {
                 gte: req.query.total_module_output_min ? Number(req.query.total_module_output_min) : undefined,
                 lte: req.query.total_module_output_max ? Number(req.query.total_module_output_max) : undefined,
             };
         }
+        // 申請出力の処理を修正
+        if (req.query.application_power_output) {
+            const rawValue = String(req.query.application_power_output);
+            whereClause.application_power_output = new client_1.Prisma.Decimal(rawValue);
+            console.log('Application Power Output Debug:', {
+                rawValue,
+                whereClause: whereClause.application_power_output
+            });
+        }
+        // 月額リース料(1-10年)の範囲検索
         if (req.query.monthly_lease_fee_min || req.query.monthly_lease_fee_max) {
-            whereClause.monthly_lease_fee = {
+            whereClause.monthly_lease_fee_10 = {
                 gte: req.query.monthly_lease_fee_min ? Number(req.query.monthly_lease_fee_min) : undefined,
                 lte: req.query.monthly_lease_fee_max ? Number(req.query.monthly_lease_fee_max) : undefined,
+            };
+        }
+        // 月額リース料(10-15年)の範囲検索
+        if (req.query.monthly_lease_fee_10_to_15_year_min || req.query.monthly_lease_fee_10_to_15_year_max) {
+            whereClause.monthly_lease_fee_15 = {
+                gte: req.query.monthly_lease_fee_10_to_15_year_min ? Number(req.query.monthly_lease_fee_10_to_15_year_min) : undefined,
+                lte: req.query.monthly_lease_fee_10_to_15_year_max ? Number(req.query.monthly_lease_fee_10_to_15_year_max) : undefined,
+            };
+        }
+        // 総額リース料の範囲検索
+        if (req.query.total_lease_fee_min || req.query.total_lease_fee_max) {
+            whereClause.total_lease_amount = {
+                gte: req.query.total_lease_fee_min ? Number(req.query.total_lease_fee_min) : undefined,
+                lte: req.query.total_lease_fee_max ? Number(req.query.total_lease_fee_max) : undefined,
             };
         }
         if (req.query.application_code) {
@@ -85,25 +143,18 @@ app.get('/api/solar-systems/search', async (req, res) => {
                 mode: 'insensitive'
             };
         }
-        console.log('Final where clause:', JSON.stringify(whereClause, null, 2));
-        // まず全件取得してデータの存在を確認
-        const allRecords = await prisma.solar_system.findMany({
-            take: 1 // 1件だけ取得
-        });
-        console.log('Sample record:', allRecords[0]);
+        console.log('Executing search with where clause:', JSON.stringify(whereClause, null, 2));
         // 検索実行
         const results = await prisma.solar_system.findMany({
             where: whereClause,
         });
-        console.log('Search results count:', results.length);
-        console.log('First result:', results[0]);
-        res.json(results);
+        console.log(`Found ${results.length} results`);
+        return res.json(results);
     }
     catch (error) {
-        console.error('Detailed error:', error);
-        const errorMessage = error instanceof Error ? error.message : '不明なエラーが発生しました';
-        res.status(500).json({
-            error: errorMessage,
+        console.error('Search error:', error);
+        return res.status(500).json({
+            error: error instanceof Error ? error.message : '不明なエラーが発生しました',
             details: error instanceof Error ? error.stack : undefined
         });
     }

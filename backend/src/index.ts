@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -118,9 +118,14 @@ app.get('/api/solar-systems/search', async (req: express.Request, res: express.R
       };
     }
 
-    // 申請出力
+    // 申請出力の処理を修正
     if (req.query.application_power_output) {
-      whereClause.application_power_output = Number(req.query.application_power_output);
+      const rawValue = String(req.query.application_power_output);
+      whereClause.application_power_output = new Prisma.Decimal(rawValue);
+      console.log('Application Power Output Debug:', {
+        rawValue,
+        whereClause: whereClause.application_power_output
+      });
     }
 
     // 月額リース料(1-10年)の範囲検索

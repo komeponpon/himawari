@@ -34,6 +34,7 @@ services:
     image: postgres:16
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=leasecode
       - POSTGRES_USER=postgres
@@ -53,3 +54,6 @@ services:
       - xpack.security.enabled=false  # 開発環境用。本番環境では適切なセキュリティ設定を行ってください。
     ports:
       - '9200:9200'
+
+volumes:
+  postgres_data:
