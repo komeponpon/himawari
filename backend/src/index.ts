@@ -110,6 +110,7 @@ app.get('/api/solar-systems/search', async (req: express.Request, res: express.R
       whereClause.module_count = Number(req.query.module_count);
     }
 
+    // パネル合計出力の範囲検索
     if (req.query.total_module_output_min || req.query.total_module_output_max) {
       whereClause.total_module_output = {
         gte: req.query.total_module_output_min ? Number(req.query.total_module_output_min) : undefined,
@@ -117,10 +118,32 @@ app.get('/api/solar-systems/search', async (req: express.Request, res: express.R
       };
     }
 
+    // 申請出力
+    if (req.query.application_power_output) {
+      whereClause.application_power_output = Number(req.query.application_power_output);
+    }
+
+    // 月額リース料(1-10年)の範囲検索
     if (req.query.monthly_lease_fee_min || req.query.monthly_lease_fee_max) {
-      whereClause.monthly_lease_fee = {
+      whereClause.monthly_lease_fee_10 = {
         gte: req.query.monthly_lease_fee_min ? Number(req.query.monthly_lease_fee_min) : undefined,
         lte: req.query.monthly_lease_fee_max ? Number(req.query.monthly_lease_fee_max) : undefined,
+      };
+    }
+
+    // 月額リース料(10-15年)の範囲検索
+    if (req.query.monthly_lease_fee_10_to_15_year_min || req.query.monthly_lease_fee_10_to_15_year_max) {
+      whereClause.monthly_lease_fee_15 = {
+        gte: req.query.monthly_lease_fee_10_to_15_year_min ? Number(req.query.monthly_lease_fee_10_to_15_year_min) : undefined,
+        lte: req.query.monthly_lease_fee_10_to_15_year_max ? Number(req.query.monthly_lease_fee_10_to_15_year_max) : undefined,
+      };
+    }
+
+    // 総額リース料の範囲検索
+    if (req.query.total_lease_fee_min || req.query.total_lease_fee_max) {
+      whereClause.total_lease_amount = {
+        gte: req.query.total_lease_fee_min ? Number(req.query.total_lease_fee_min) : undefined,
+        lte: req.query.total_lease_fee_max ? Number(req.query.total_lease_fee_max) : undefined,
       };
     }
 
@@ -139,7 +162,7 @@ app.get('/api/solar-systems/search', async (req: express.Request, res: express.R
     });
 
     console.log(`Found ${results.length} results`);
-    
+
     return res.json(results);
 
   } catch (error) {
