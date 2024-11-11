@@ -14,7 +14,7 @@ interface CsvRow {
   module_count: string;
   pcs_model: string;
   pcs_count: string;
-  pcs_count_2: string;
+  pcs_count2: string;
   module_pcs_cable_count: string;
   bifurcated_count: string;
   bracket_count: string;
@@ -26,7 +26,7 @@ interface CsvRow {
   module_manufacturer: string;
   module_model: string;
   pcs_manufacturer: string;
-  pcs_model_2: string;
+  pcs_model2: string;
   region: string;
   roof_material: string;
   installation_points: string;
@@ -61,7 +61,7 @@ async function importCsv(): Promise<void> {
             module_count: Number(row.module_count || 0),
             pcs_model: row.pcs_model || '',
             pcs_count: Number(row.pcs_count || 0),
-            pcs_count2: row.pcs_count_2 ? Number(row.pcs_count_2) : null,
+            pcs_count2: row.pcs_count2 ? Number(row.pcs_count2) : null,
             module_pcs_cable_count: Number(row.module_pcs_cable_count || 0),
             bifurcated_count: Number(row.bifurcated_count || 0),
             bracket_count: Number(row.bracket_count || 0),
@@ -73,7 +73,7 @@ async function importCsv(): Promise<void> {
             module_manufacturer: row.module_manufacturer,
             module_model: row.module_model,
             pcs_manufacturer: row.pcs_manufacturer,
-            pcs_model2: row.pcs_model_2 || '',
+            pcs_model2: row.pcs_model2 || '',
             region: row.region,
             roof_material: row.roof_material,
             installation_points: row.installation_points,

@@ -29,6 +29,7 @@ model solar_system {
   module_pcs_cable_count   Int
   bifurcated_count         Int
   bracket_count            Int
+  installation             Boolean @default(false)
   total_module_output      Decimal @db.Decimal(10, 2)
   application_power_output Decimal @db.Decimal(10, 2)
   region                   String  @db.VarChar(50)
