@@ -143,12 +143,20 @@ app.get('/api/solar-systems/search', async (req, res) => {
                 mode: 'insensitive'
             };
         }
-        console.log('Executing search with where clause:', JSON.stringify(whereClause, null, 2));
+        if (req.query.installation !== undefined) {
+            const installationValue = req.query.installation === 'true';
+            whereClause.installation = installationValue;
+            console.log('Installation query param:', req.query.installation);
+            console.log('Converted installation value:', installationValue);
+            console.log('Where clause installation:', whereClause.installation);
+        }
+        console.log('Final where clause:', JSON.stringify(whereClause, null, 2));
         // 検索実行
         const results = await prisma.solar_system.findMany({
             where: whereClause,
         });
         console.log(`Found ${results.length} results`);
+        console.log('First result installation value:', results[0]?.installation);
         return res.json(results);
     }
     catch (error) {

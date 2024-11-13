@@ -32,6 +32,7 @@ interface CsvRow {
   installation_points: string;
   customer_group: string;
   application_code: string;
+  installation: boolean;
 }
 
 const prisma = new PrismaClient();
@@ -79,6 +80,7 @@ async function importCsv(): Promise<void> {
             installation_points: row.installation_points,
             customer_group: row.customer_group,
             application_code: row.application_code,
+            installation: Number(row.installation) === 1,
           }));
 
           console.log('Importing data...', formattedData[0]);
