@@ -78,6 +78,12 @@ app.get('/api/solar-systems/search', async (req, res) => {
                 mode: 'insensitive'
             };
         }
+        if (req.query.pcs_manufacturer) {
+            whereClause.pcs_manufacturer = {
+                contains: String(req.query.pcs_manufacturer),
+                mode: 'insensitive'
+            };
+        }
         if (req.query.region) {
             whereClause.region = {
                 contains: String(req.query.region),
