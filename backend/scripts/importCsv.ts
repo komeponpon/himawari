@@ -3,7 +3,6 @@ import csv from 'csv-parser';
 import fs from 'fs';
 import path from 'path';
 import iconv from 'iconv-lite';
-import { Stream } from 'stream';
 
 // 型定義の追加
 interface CsvRow {
@@ -33,13 +32,14 @@ interface CsvRow {
   customer_group: string;
   application_code: string;
   installation: boolean;
+  sll: boolean;
 }
 
 const prisma = new PrismaClient();
 
 async function importCsv(): Promise<void> {
   const results: CsvRow[] = [];
-  const csvPath = path.join(__dirname, '../data/data.csv');
+  const csvPath = path.join(__dirname, '../data/data_tf.csv');
 
   return new Promise((resolve, reject) => {
     const fileContent = fs.readFileSync(csvPath);
@@ -81,6 +81,7 @@ async function importCsv(): Promise<void> {
             customer_group: row.customer_group,
             application_code: row.application_code,
             installation: Number(row.installation) === 1,
+            sll: Number(row.sll) === 1,
           }));
 
           console.log('Importing data...', formattedData[0]);

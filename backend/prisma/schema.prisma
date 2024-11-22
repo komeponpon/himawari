@@ -30,12 +30,13 @@ model solar_system {
   bifurcated_count         Int
   bracket_count            Int
   installation             Boolean @default(false)
+  sll                      Boolean @default(false)
   total_module_output      Decimal @db.Decimal(10, 2)
   application_power_output Decimal @db.Decimal(10, 2)
   region                   String  @db.VarChar(50)
   roof_material            String  @db.VarChar(50)
   installation_points      String  @db.VarChar(50)
-  monthly_lease_fee_10     Decimal @db.Decimal(10, 0)
+  monthly_lease_fee_10     Decimal? @db.Decimal(10, 0)
   monthly_lease_fee_15     Decimal? @db.Decimal(10, 0)
   total_lease_amount       Decimal @db.Decimal(10, 0)
   customer_group           String  @db.VarChar(50)

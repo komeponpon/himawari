@@ -175,6 +175,11 @@ app.get('/api/solar-systems/search', async (req: express.Request, res: express.R
       console.log('Where clause installation:', whereClause.installation);
     }
 
+    if (req.query.sll !== undefined) {
+      const sllValue = req.query.sll === 'true';
+      whereClause.sll = sllValue;
+    }
+
     console.log('Final where clause:', JSON.stringify(whereClause, null, 2));
 
     // 検索実行

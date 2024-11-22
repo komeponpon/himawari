@@ -16,6 +16,7 @@ CREATE TABLE "solar_system" (
     "bifurcated_count" INTEGER NOT NULL,
     "bracket_count" INTEGER NOT NULL,
     "installation" BOOLEAN NOT NULL DEFAULT false,
+    "sll" BOOLEAN NOT NULL DEFAULT false,
     "total_module_output" DECIMAL(10,2) NOT NULL,
     "application_power_output" DECIMAL(10,2) NOT NULL,
     "region" VARCHAR(50) NOT NULL,
