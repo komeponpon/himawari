@@ -70,3 +70,13 @@ model construction_costs {
   total_lease_amount       Decimal @db.Decimal(10, 0)
   application_code         String  @unique @db.VarChar(50)
 }
+
+model users {
+  id                       Int    @id @default(autoincrement())
+  userId                    String @unique
+  password                 String
+  customerGroup            String
+  roles                    String[] @default(["user"])
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
