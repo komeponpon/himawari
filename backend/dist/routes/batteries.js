@@ -8,7 +8,7 @@ const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 // /api/batteries/search エンドポイント
-router.get('/api/batteries/search', async (req, res) => {
+router.get('/search', async (req, res) => {
     try {
         console.log('Received battery search request');
         console.log('Search params:', req.query);

@@ -5,7 +5,7 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 // /api/batteries/search エンドポイント
-router.get('/api/batteries/search', async (req: express.Request, res: express.Response): Promise<any> => {
+router.get('/search', async (req: express.Request, res: express.Response): Promise<any> => {
   try {
     console.log('Received battery search request');
     console.log('Search params:', req.query);
