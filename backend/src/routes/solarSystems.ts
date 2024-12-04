@@ -1,4 +1,5 @@
 import express from 'express';
+import { Decimal } from '@prisma/client/runtime/library.js';
 import { PrismaClient, Prisma } from '@prisma/client';
 
 const router = express.Router();
@@ -109,7 +110,7 @@ router.get('/search', async (req: express.Request, res: express.Response): Promi
     // 申請出力の処理を修正
     if (req.query.application_power_output) {
       const rawValue = String(req.query.application_power_output);
-      whereClause.application_power_output = new Prisma.Decimal(rawValue);
+      whereClause.application_power_output = new Decimal(rawValue);
       console.log('Application Power Output Debug:', {
         rawValue,
         whereClause: whereClause.application_power_output
